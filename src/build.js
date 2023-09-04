@@ -9,18 +9,13 @@ export default async function build() {
 
   const tasks = modules.map(async module => {
     await vite.build({
-      plugins: [react({
-        jsxImportSource: '@emotion/react',
-        // babel: {
-        //   presets: [
-        //     ['@babel/preset-react', { runtime: 'automatic', importSource: '@emotion/react' }]
-        //   ],
-        //   plugins: ['@emotion/babel-plugin']
-        // }
-      })],
+      // plugins: [react({
+      //   jsxImportSource: '@emotion/react',
+      // })],
       mode: env,
       publicDir: process.cwd() + module.root,
       build: {
+        minify: 'terser',
         ssr: false,
         outDir: getClientDir(module.id),
         cssCodeSplit: true,
@@ -45,9 +40,11 @@ export default async function build() {
         jsxImportSource: '@emotion/react',
 
       })],
+      
       mode: env,
       publicDir: process.cwd() + module.root,
       build: {
+        minify: 'terser',
         ssr: true,
         manifest: true,
         outDir: getServerDir(module.id),
