@@ -1,6 +1,5 @@
 import { getClientDir, getImportFile, getServerDir } from './util'
 import * as vite from 'vite'
-import react from '@vitejs/plugin-react-swc'
 import process from 'process'
 export default async function build() {
   const env = process.argv[2]
@@ -9,17 +8,14 @@ export default async function build() {
 
   const tasks = modules.map(async module => {
     await vite.build({
-      // plugins: [react({
-      //   jsxImportSource: '@emotion/react',
-      // })],
       mode: env,
       publicDir: process.cwd() + module.root,
       build: {
-        minify: 'terser',
+        minify: false,
         ssr: false,
         outDir: getClientDir(module.id),
         cssCodeSplit: true,
-        manifest: true,
+        // manifest: true,
         rollupOptions: {
           input: `${module.root}/index.html`,
 
@@ -28,7 +24,8 @@ export default async function build() {
             assetFileNames: `[name]-[hash].[ext]`,
             entryFileNames: `[name].js`
 
-          }]
+          }],
+         
         }
       }
     })
@@ -36,11 +33,6 @@ export default async function build() {
       return
     }
     await vite.build({
-      plugins: [react({
-        jsxImportSource: '@emotion/react',
-
-      })],
-      
       mode: env,
       publicDir: process.cwd() + module.root,
       build: {
@@ -52,14 +44,11 @@ export default async function build() {
 
           input: `${module.root}/App.tsx`,
           output: 'renderer.js'
+
         }
       }
     })
     await vite.build({
-      plugins: [react({
-        jsxImportSource: '@emotion/react',
-
-      })],
       mode: env,
       publicDir: process.cwd() + module.root,
       build: {
