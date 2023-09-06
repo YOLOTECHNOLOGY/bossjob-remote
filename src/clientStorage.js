@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 // 初始化 BOSSJOB_SHARED_DATA
 window.BOSSJOB_SHARED_DATA = window.BOSSJOB_SHARED_DATA || {};
 window.BOSSJOB_INITIAL_PROPS = window.BOSSJOB_INITIAL_PROPS || {};

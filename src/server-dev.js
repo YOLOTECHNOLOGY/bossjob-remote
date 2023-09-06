@@ -25,7 +25,7 @@ export default async function startServer() {
 
     points.forEach(async point => {
 
-        app.get('/chat', async (req, res) => {
+        app.get(`/${point.id}`, async (req, res) => {
             const filePath = join(process.cwd(), getPointHtmlPath(point.id, true));
             let html = ''
             html = readFileSync(filePath, 'utf8')

@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-
 export const getClient = config => {
     if (typeof config.parseScript !== 'function') {
         throw new Error(' config.parseScript must be a function! ')
@@ -23,20 +21,25 @@ export const getClient = config => {
             const headerScripts = data.scripts?.map(s => config.parseScript(s, options.baseUrl))
             const headerLinks = data.links?.map(l => config.parseLink(l, options.baseUrl))
             const bodyScripts = data.bodyScripts?.map(s => config.parseScript(s, options.baseUrl))
+            const initalSharedData = { ...data.initalSharedData, ...options.initalSharedData }
+
             const inital = config.parseScript({
                 contentText: `
                  window.BOSSJOB_INITIAL_PROPS = window.BOSSJOB_INITIAL_PROPS || {};
+                 window.BOSSJOB_SHARED_DATA = window.BOSSJOB_SHARED_DATA || {};
+
                  window.BOSSJOB_INITIAL_PROPS["${options.id}"] = ${JSON.stringify(options.initialProps ?? {})}
+                 window.BOSSJOB_SHARED_DATA = {...window.BOSSJOB_SHARED_DATA,...${JSON.stringify(initalSharedData ?? {})}}
                 `
             })
             return {
                 inHead: <>{[inital, ...headerLinks, ...headerScripts]}</>,
                 inBody: <>{bodyScripts}</>,
-                component: <Suspense>
+                component: 
                     <div id={options.id} dangerouslySetInnerHTML={options.ssr ? data.ssr : undefined}>
 
                     </div>
-                </Suspense>
+               
             }
         }
     }

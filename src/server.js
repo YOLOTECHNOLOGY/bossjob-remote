@@ -16,8 +16,9 @@ export default async function startServer() {
     const config = await getImportFile('bossjob.config.js')
     const points = config.default.remotePoints
     points.forEach(async point => {
-        app.use(express.static(getClientDir(point.id)));
-        app.get('/chat',async(req,res)=>{
+        app.use(`/${point.id}`, express.static(getClientDir(point.id)))
+        // app.use(express.static(getClientDir(point.id)));
+        app.get(`/${point.id}`,async(req,res)=>{
             const filePath = join(process.cwd(), getPointHtmlPath(point.id));
             let html = ''
             html = readFileSync(filePath, 'utf8')
@@ -42,12 +43,12 @@ export default async function startServer() {
                 next(error)
             }
         });
-        const server = app.listen(3000, () => {
-            const host = server.address().address;
-            const port = server.address().port;
-            console.log(`Example app listening at http://${host}:${port}`);
-        });
     })
+    const server = app.listen(3000, () => {
+        const host = server.address().address;
+        const port = server.address().port;
+        console.log(`Example app listening at http://${host}:${port}`);
+    });
 }
 
 startServer()

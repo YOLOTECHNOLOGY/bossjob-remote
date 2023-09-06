@@ -9,6 +9,7 @@ export default async function build() {
   const tasks = modules.map(async module => {
     await vite.build({
       mode: env,
+      base: `/${module.id}/`,
       publicDir: process.cwd() + module.root,
       build: {
         minify: false,
@@ -34,6 +35,7 @@ export default async function build() {
     }
     await vite.build({
       mode: env,
+      base: `/${module.id}/`,
       publicDir: process.cwd() + module.root,
       build: {
         minify: 'terser',
@@ -50,6 +52,7 @@ export default async function build() {
     })
     await vite.build({
       mode: env,
+      base: `/${module.id}/`,
       publicDir: process.cwd() + module.root,
       build: {
         ssr: true,
