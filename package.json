@@ -1,11 +1,14 @@
 {
   "name": "bossjob-remote",
   "private": false,
-  "version": "0.0.1-fix1",
+  "version": "0.0.1-fix3",
   "type": "module",
   "engines": {
     "node": ">=14.0.0"
   },
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.js",
   "scripts": {
     "dev": "vite",
