@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 // 初始化 BOSSJOB_SHARED_DATA
 window.BOSSJOB_SHARED_DATA = window.BOSSJOB_SHARED_DATA || {};
 window.BOSSJOB_INITIAL_PROPS = window.BOSSJOB_INITIAL_PROPS || {};
 // 创建一个 BehaviorSubject，用于发布数据变化
-const subject = new BehaviorSubject(null);
+window.BOSSJOB_BASE_SUBJECT = window.BOSSJOB_BASE_SUBJECT || new BehaviorSubject(null);
 
 // 设置数据
 const setCache = (id, data) => {
     const oldData = window.BOSSJOB_SHARED_DATA?.[id]
-    let newData = typeof data === 'function' ? data(oldData) : data
+    // 如涉及到函数，则执行函数
+    const newData = typeof data === 'function' ? data(oldData) : data;
     window.BOSSJOB_SHARED_DATA[id] = newData;
     // 发布数据变化
     if (!deepEqual(oldData, newData)) {
-        subject.next({ type: 'SHARE_DATA_CHANGED', id, data: window.BOSSJOB_SHARED_DATA[id] });
+        window.BOSSJOB_BASE_SUBJECT.next({ type: 'SHARE_DATA_CHANGED', id, data: window.BOSSJOB_SHARED_DATA[id] });
     }
 };
 
@@ -32,10 +33,13 @@ export const setInitialProps = (id, data) => {
 }
 
 export const watchSharedData = (id, watcher) => {
-    subject.pipe(
-        filter(({ type }) => type === 'SHARE_DATA_CHANGED'),
-        filter(({ moduleId }) => moduleId === id)
-    ).subscribe(watcher);
+    const revoker = window.BOSSJOB_BASE_SUBJECT
+    .pipe(
+        filter((note) => note?.type === 'SHARE_DATA_CHANGED'),
+        filter(({ id: moduleId }) => moduleId === id)
+    )
+    .subscribe(watcher);
+    return revoker.unsubscribe;
 }
 export const publishSharedData = (id, data) => {
     setCache(id, data)
@@ -43,7 +47,9 @@ export const publishSharedData = (id, data) => {
 export const useSharedData = id => {
     const [data, setData] = useState(getSharedData(id))
     useEffect(() => {
-        watchSharedData(id, result => setData(result?.data))
+        return watchSharedData(id, result => {
+            setData(result?.data)
+        })
     }, [])
     return data
 }

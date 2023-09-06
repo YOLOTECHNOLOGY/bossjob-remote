@@ -8,7 +8,7 @@ export default defineConfig({
 
   },
   build: {
-    minify: true,
+    // minify: true,
     rollupOptions: {
       input: [
         'src/index.js',
