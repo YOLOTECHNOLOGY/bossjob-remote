@@ -1,13 +1,12 @@
 {
   "name": "bossjob-remote",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "0.0.1-fix1",
   "type": "module",
   "engines": {
     "node": ">=14.0.0"
   },
   "main": "dist/index.js",
-  
   "scripts": {
     "dev": "vite",
     "build": "vite build --ssr",
@@ -15,7 +14,7 @@
     "preview": "vite preview"
   },
   "bin": {
-    "bossjob": "./cli.js"
+    "bossjob": "./src/cli.js"
   },
   "dependencies": {
     "@vitejs/plugin-react-swc": "^3.3.2",
