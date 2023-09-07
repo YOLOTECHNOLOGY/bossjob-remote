@@ -24,7 +24,8 @@ yarn add bossjob-remote
 }```
 
 - 4 为每个远程模块创建代码文件，以chat为例:
-  *src/chat/index.tsx*
+  src/chat/index.tsx
+
   ```import App from "./App"
 import { getInitialProps } from 'bossjob-remote/dist/clientStorage'
 import React from "react"
