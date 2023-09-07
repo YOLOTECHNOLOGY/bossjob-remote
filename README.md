@@ -200,3 +200,79 @@ export default async function PublicLayout(props: any) {
 }
 
 ```
+
+## 数据通信
+
+- 主工程在连接子模块时可以传递initalProps
+```
+ const data = {
+    config,
+    lang,
+    chatDictionary: dictionary?.chat ?? {},
+    chat_id,
+    userDetail: userDetailRes?.data?.data
+  }
+  const chatModule = await bossjobClient.connectModule({
+    id: 'chat',
+    baseUrl: 'http://localhost:3000',
+    initialProps: data,       // 传给远程组件初始化的props
+    initalSharedData: {        
+      CHAT_ID: +chat_id ? chat_id : null,
+    }
+  })  
+```
+- 子模块可以在入口文件使用getInitialProps接收此状态
+```
+// src/chat/index.tsx
+import App from "./App"
+import { getInitialProps } from 'bossjob-remote/dist/clientStorage'
+import React from "react"
+import { hydrateRoot } from 'react-dom/client';
+
+function render() {
+    const props = getInitialProps('chat')
+    const container = document.getElementById('chat');
+    hydrateRoot(container, <App {...props} />);
+}
+render()
+```
+
+- 每个模块都可以发布共享状态，共享状态由id标记，相同id的状态会覆盖旧数据。
+
+```
+import { publishSharedData } from 'bossjob-remote/dist/clientStorage'
+
+function publishChatId(chatId) {
+  publishSharedData('CHAT_ID', chatId) 
+}
+
+```
+其他节点可以用  useSharedData 监听数据变化。
+```
+import { useSharedData } from 'bossjob-remote/dist/clientStorage'
+import { useEffect } from 'react'
+const Page = () => {
+    const chatId = useSharedData('CHAT_ID')
+    useEffect(() => {
+       ...
+    }, [chatId])
+
+    return (
+        <>
+        </>
+    );
+}
+export default Page
+```
+
+其他节点可以用  useSharedData 监听数据变化。
+```
+import { watchSharedData } from 'bossjob-remote/dist/clientStorage'
+ 
+function watchChatIdChange() {
+    watchSharedData('CHAT_ID', (newChatId) => {
+        ...
+    });
+}
+export default Page
+```
