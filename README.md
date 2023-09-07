@@ -148,7 +148,7 @@ const client = getClient({
 
 export default client
 ```
-- 3 在页面的根layout中连接远程模块
+- 3 在页面的根layout中连接远程模块，可在同一页面连接多个模块，以chat，third为例，其中third为ssr模块
 
 ```
 app/(chat-page)/layout.tsx
@@ -183,7 +183,6 @@ export default async function PublicLayout(props: any) {
   return (
     <html lang={lang} translate='no'>
       <head >
-        <title>{title}</title>
         {chatModule.inHead}
         {thirdModule.inHead}
       </head>
