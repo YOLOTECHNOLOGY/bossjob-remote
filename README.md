@@ -28,7 +28,7 @@ export default {
 - 4 为每个远程模块创建代码文件，以chat为例:
   src/chat/index.tsx
 
-  ```
+```
 import App from "./App"
 import { getInitialProps } from 'bossjob-remote/dist/clientStorage'
 import React from "react"
@@ -43,9 +43,9 @@ function render() {
 render()
 ```
 
+如果启用ssr则改为:
 
-  如果启用ssr则改为:
-   ```
+```
 import App from "./App"
 import { getInitialProps } from 'bossjob-remote/dist/clientStorage'
 import React from "react"
@@ -57,7 +57,7 @@ function render() {
     hydrateRoot(container, <App {...props} />);
 }
 render()
-  ```
+```
 界面主节点:
 *src/chat/App.tsx* 
 ```import React, { useState } from 'react';
