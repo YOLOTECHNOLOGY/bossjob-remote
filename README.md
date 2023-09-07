@@ -45,6 +45,7 @@ render()
 如果启用ssr则改为:
 
 ```
+// src/chat/index.tsx
 import App from "./App"
 import { getInitialProps } from 'bossjob-remote/dist/clientStorage'
 import React from "react"
@@ -76,4 +77,42 @@ function App() {
 }
 
 export default App
+```
+为每个module创建一个html入口文件: src/chat/index.html
+
+```
+<!doctype html>
+<html >
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div id="chat"></div>
+    <script type="module" src="/src/chat/index.tsx"></script>
+  </body>
+</html>
+```
+如果使用了ssr 还需添加服务器文件用于编译:
+```
+// src/chat/renderer.js
+import  { default as serverRenderer} from 'bossjob-remote/dist/serverRenderer'
+
+export default serverRenderer
+```
+开发模式则添加:
+```
+// src/chat/renderer-dev.js
+import  { default as serverRenderer} from 'bossjob-remote/dist/serverRenderer-dev'
+
+export default serverRenderer
+```
+在命令行中执行进行编译:
+
+```
+bossjob build
+```
+完成编译后启动服务:
+
+```
+bossjob start
 ```
