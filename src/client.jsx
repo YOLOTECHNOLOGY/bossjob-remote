@@ -13,7 +13,10 @@ export const getClient = config => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ initialProps: options.initialProps ?? {} }),
-            }).then(response => response.json())
+            }).then(response => {
+                console.log({ response })
+                return response.json()
+            })
                 .catch((error) => {
                     console.error('Error:', error);
                 });
@@ -22,7 +25,6 @@ export const getClient = config => {
             const headerLinks = data.links?.map(l => config.parseLink(l, options.baseUrl))
             const bodyScripts = data.bodyScripts?.map(s => config.parseScript(s, options.baseUrl))
             const initalSharedData = { ...data.initalSharedData, ...options.initalSharedData }
-
             const inital = config.parseScript({
                 contentText: `
                  window.BOSSJOB_INITIAL_PROPS = window.BOSSJOB_INITIAL_PROPS || {};
@@ -35,11 +37,11 @@ export const getClient = config => {
             return {
                 inHead: <>{[inital, ...headerLinks, ...headerScripts]}</>,
                 inBody: <>{bodyScripts}</>,
-                component: 
-                    <div id={options.id} dangerouslySetInnerHTML={options.ssr ? data.ssr : undefined}>
+                component:
+                    <div id={options.id} dangerouslySetInnerHTML={options.ssr ? { __html: data.ssr } : undefined}>
 
                     </div>
-               
+
             }
         }
     }

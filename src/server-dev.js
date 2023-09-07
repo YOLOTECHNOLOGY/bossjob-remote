@@ -1,6 +1,6 @@
 
 import express from 'express';
-import {  getImportFile, getPointHtmlPath, parseHtml } from './util';
+import { getImportFile, getPointHtmlPath, parseHtml } from './util';
 import process from 'process';
 import { join } from 'path';
 import { readFileSync } from 'fs';
@@ -11,13 +11,14 @@ export default async function startServer() {
     const config = await getImportFile('bossjob.config.js')
     const points = config.default.remotePoints
     const vite = await createViteServer({
-        server: { middlewareMode: true, preTransformRequests: false },
+        server: { middlewareMode: true, preTransformRequests: true },
         appType: 'custom',
         // esbuild:{
         //     exclude:['@react-refresh','react','react-dom']
         // },
+        base:'http://localhost:3000/',
         mode: 'development',
-        optimizeDeps:{
+        optimizeDeps: {
 
         }
     })
@@ -37,7 +38,9 @@ export default async function startServer() {
                 const data = req.body?.data;
                 let ssr = false, html
                 if (point.ssr) {
-                    const renderer = await vite.ssrLoadModule(path.resolve(process.cwd(), `dist-${point.id}/server/renderer/serverRenderer-dev.js`))
+                    const { default: renderer } = await vite.ssrLoadModule(path.resolve(process.cwd(), `src/${point.id}/renderer-dev.js`))
+                        .catch(e => console.log({ e }))
+                    console.log({ renderer })
                     ssr = await renderer(point.id, data, vite)
                 }
                 const filePath = join(process.cwd(), getPointHtmlPath(point.id, true));
@@ -51,12 +54,12 @@ export default async function startServer() {
             }
         })
 
-        const server = app.listen(3000, () => {
-            const host = server.address().address;
-            const port = server.address().port;
-            console.log(`Example app listening at http://${host}:${port}`);
-        });
     })
+    const server = app.listen(3000, () => {
+        const host = server.address().address;
+        const port = server.address().port;
+        console.log(`Example app listening at http://${host}:${port}`);
+    });
 }
 
 startServer()

@@ -24,7 +24,7 @@ export function getServerDir(id, devMode = false) {
 
 export function getPointHtmlPath(id, devMode = false) {
     if (devMode) {
-        return `/index.html`
+        return `src/${id}/index.html`
     }
     return `dist-${id}/client/src/${id}/index.html`
 }

@@ -1,8 +1,31 @@
-# React + Vite
+# Bossjob 远程模块构建连接库
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 1 创建远程模块，远程模块基于vite。
+```
+yarn create vite
+```
+- 2 安装bossjob-remote:
+```
+yarn add bossjob-remote
+```
+- 3 在根目录下创建bossjob.config.js 一个工程可以包含多个模块
+```
+export default {
+    remotePoints: [
+        {
+            id: 'third',  // 模块唯一id
+            ssr: true,    // 是否启用服务端渲染
+            root: 'src/third' // 模块根目录，建议src/[module_id]
+        },
+        {
+            id: 'chat',
+            ssr: false,
+            root: 'src/chat'
+        },
+        {
+            id: 'chat-service',
+            ssr: false,
+            root: 'src/chat-service'
+        }]
+}
+```

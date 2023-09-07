@@ -13,6 +13,7 @@ export default async function build() {
       publicDir: process.cwd() + module.root,
       build: {
         minify: false,
+        manifest: true,
         ssr: false,
         outDir: getClientDir(module.id),
         cssCodeSplit: true,
@@ -45,7 +46,7 @@ export default async function build() {
         rollupOptions: {
 
           input: `${module.root}/App.tsx`,
-          output: 'renderer.js'
+          // output: 'renderer.js'
 
         }
       }
@@ -60,8 +61,23 @@ export default async function build() {
         outDir: getServerDir(module.id) + '/renderer',
         rollupOptions: {
 
-          input: `bossjob-remote/dist/serverRenderer.js`,
-          output: 'renderer.js'
+          input: `${module.root}/renderer.js`,
+          output: 'serverRenderer.js'
+        }
+      }
+    })
+    await vite.build({
+      mode: env,
+      base: `/${module.id}/`,
+      publicDir: process.cwd() + module.root,
+      build: {
+        ssr: true,
+        manifest: true,
+        outDir: getServerDir(module.id) + '/renderer-dev',
+        rollupOptions: {
+
+          input: `${module.root}/renderer-dev.js`,
+          output: 'serverRenderer.js'
         }
       }
     })

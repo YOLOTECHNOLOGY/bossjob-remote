@@ -32,7 +32,7 @@ export default async function startServer() {
 
                 let ssr = false, html
                 if (point.ssr) {
-                    const { default: renderer } = await getImportFile(`dist-${point.id}/server/renderer/serverRenderer.js`)
+                    const { default: renderer } = await getImportFile(`dist-${point.id}/server/renderer/renderer.js`)
                     ssr = await renderer(point.id, data)
                 }
                 const filePath = join(process.cwd(), getPointHtmlPath(point.id));
