@@ -13,14 +13,9 @@ yarn add bossjob-remote
 export default {
     remotePoints: [
         {
-            id: 'third',  // 模块唯一id
-            ssr: true,    // 是否启用服务端渲染
-            root: 'src/third' // 模块根目录，建议src/[module_id]
-        },
-        {
-            id: 'chat',
-            ssr: false,
-            root: 'src/chat'
+            id: 'chat',       // 模块唯一id
+            ssr: false,       // 是否启用服务端渲染
+            root: 'src/chat'  // 模块根目录，建议src/[module_id]
         },
         {
             id: 'chat-service',
@@ -29,3 +24,34 @@ export default {
         }]
 }
 ```
+- 4 为每个远程模块创建代码文件，以chat为例:
+  *src/chat/index.tsx*
+  ```
+import App from "./App"
+import { getInitialProps } from 'bossjob-remote/dist/clientStorage'
+import React from "react"
+import { createRoot } from 'react-dom/client';
+
+function render() {
+    const props = getInitialProps('chat')
+    const container = document.getElementById('chat');
+    const root = createRoot(container);
+    root.render(<App {...props} />);
+}
+render()
+  ```
+  如果启用ssr则改为:
+   ```
+import App from "./App"
+import { getInitialProps } from 'bossjob-remote/dist/clientStorage'
+import React from "react"
+import { hydrateRoot } from 'react-dom/client';
+
+function render() {
+    const props = getInitialProps('chat')
+    const container = document.getElementById('chat');
+    hydrateRoot(container, <App {...props} />);
+}
+render()
+  ```
+  
