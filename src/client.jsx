@@ -19,14 +19,20 @@ export const getClient = config => {
             })
                 .catch((error) => {
                     console.error('Error:', error);
+                    return {
+                        inHead: null,
+                        inBody: null,
+                        component: null,
+                        error: error
+                    }
                 });
 
-            const headerScripts = data.scripts?.map(s => config.parseScript(s, options.baseUrl))
-            const headerLinks = data.links?.map(l => config.parseLink(l, options.baseUrl))
-            const bodyScripts = data.bodyScripts?.map(s => config.parseScript(s, options.baseUrl))
+            const headerScripts = data.scripts?.map(config.parseScript)
+            const headerLinks = data.links?.map(config.parseLink)
+            const bodyScripts = data.bodyScripts?.map(config.parseScript)
             const initalSharedData = { ...data.initalSharedData, ...options.initalSharedData }
             const inital = config.parseScript({
-                contentText: `
+                textContent: `
                  window.BOSSJOB_INITIAL_PROPS = window.BOSSJOB_INITIAL_PROPS || {};
                  window.BOSSJOB_SHARED_DATA = window.BOSSJOB_SHARED_DATA || {};
 

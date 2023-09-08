@@ -1,7 +1,7 @@
 
 import express from 'express';
 import cors from 'cors';
-import { getClientDir, getImportFile, getPointHtmlPath, parseHtml } from './util';
+import { getClientDir, getImportFile, getPointHtmlPath, getServerPublic, parseHtml } from './util';
 import process from 'process';
 import { join } from 'path';
 import { readFileSync } from 'fs';
@@ -15,9 +15,16 @@ export default async function startServer() {
     app.use(cors());
     const config = await getImportFile('bossjob.config.js')
     const points = config.default.remotePoints
+    app.use(express.static(getServerPublic(),{
+        setHeaders: (res, path) => {
+          if (path.endsWith('.js')) {
+            res.set('Service-Worker-Allowed', '/');
+          }
+        }
+      }));
     points.forEach(async point => {
         app.use(`/${point.id}`, express.static(getClientDir(point.id)))
-        // app.use(express.static(getClientDir(point.id)));
+        app.use(express.static(getClientDir(point.id)));
         app.get(`/${point.id}`,async(req,res)=>{
             const filePath = join(process.cwd(), getPointHtmlPath(point.id));
             let html = ''

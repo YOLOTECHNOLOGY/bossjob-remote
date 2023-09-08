@@ -21,7 +21,10 @@ export function getServerDir(id, devMode = false) {
     }
     return `dist-${id}/server`
 }
-
+export function getServerPublic() {
+   
+    return `public`
+}
 export function getPointHtmlPath(id, devMode = false) {
     if (devMode) {
         return `src/${id}/index.html`
