@@ -19,7 +19,8 @@ export default defineConfig({
         'src/server.js',
         'src/server-dev.js',
         'src/client.jsx',
-        'src/clientStorage.js'
+        'src/clientStorage.js',
+        'src/hooks.js'
       ],
       output: {
         entryFileNames: `[name].js`

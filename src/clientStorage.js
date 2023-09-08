@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 // 初始化 BOSSJOB_SHARED_DATA
 window.BOSSJOB_SHARED_DATA = window.BOSSJOB_SHARED_DATA || {};
 window.BOSSJOB_INITIAL_PROPS = window.BOSSJOB_INITIAL_PROPS || {};
 // 创建一个 BehaviorSubject，用于发布数据变化
 window.BOSSJOB_BASE_SUBJECT = window.BOSSJOB_BASE_SUBJECT || new BehaviorSubject(null);
-
+window.BOSSJOB_NOTE_SUBJECT = window.BOSSJOB_NOTE_SUBJECT || new Subject(null);
 // 设置数据
 const setCache = (id, data) => {
     const oldData = window.BOSSJOB_SHARED_DATA?.[id]
@@ -32,27 +31,32 @@ export const setInitialProps = (id, data) => {
     window.BOSSJOB_INITIAL_PROPS[id] = data
 }
 
+export const postNotification = (id, note) => {
+    window.BOSSJOB_NOTE_SUBJECT.next({ id, note })
+}
+
+export const receiveNotification = (id, callback) => {
+    const revoker = window.BOSSJOB_NOTE_SUBJECT
+        .pipe(
+            filter((data) => data?.id === id),
+        )
+        .subscribe(callback);
+    return revoker.unsubscribe;
+}
+
 export const watchSharedData = (id, watcher) => {
     const revoker = window.BOSSJOB_BASE_SUBJECT
-    .pipe(
-        filter((note) => note?.type === 'SHARE_DATA_CHANGED'),
-        filter(({ id: moduleId }) => moduleId === id)
-    )
-    .subscribe(watcher);
+        .pipe(
+            filter((note) => note?.type === 'SHARE_DATA_CHANGED'),
+            filter(({ id: moduleId }) => moduleId === id)
+        )
+        .subscribe(watcher);
     return revoker.unsubscribe;
 }
 export const publishSharedData = (id, data) => {
     setCache(id, data)
 }
-export const useSharedData = id => {
-    const [data, setData] = useState(getSharedData(id))
-    useEffect(() => {
-        return watchSharedData(id, result => {
-            setData(result?.data)
-        })
-    }, [])
-    return data
-}
+
 window.BOSSJOB_STORAGE_COMMANDS = {
     getSharedData,
     watchSharedData,
