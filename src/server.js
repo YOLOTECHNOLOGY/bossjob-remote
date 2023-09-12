@@ -22,6 +22,14 @@ export default async function startServer() {
           }
         }
       }));
+    app.use('/health',async(req,res)=>{
+        res.setHeader('Content-Type', 'text/plain')
+        res.statusCode = 200;
+        res.statusMessage = 'ok';
+        res.write('I\'m alive')
+        res.end()
+    })
+    
     points.forEach(async point => {
         app.use(`/${point.id}`, express.static(getClientDir(point.id)))
         app.use(express.static(getClientDir(point.id)));
