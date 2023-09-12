@@ -41,7 +41,7 @@ export const receiveNotification = (id, callback) => {
             filter((data) => data?.id === id),
         )
         .subscribe(callback);
-    return revoker.unsubscribe;
+    return () => revoker.unsubscribe();
 }
 
 export const watchSharedData = (id, watcher) => {
@@ -51,7 +51,7 @@ export const watchSharedData = (id, watcher) => {
             filter(({ id: moduleId }) => moduleId === id)
         )
         .subscribe(watcher);
-    return revoker.unsubscribe;
+    return () => revoker.unsubscribe();
 }
 export const publishSharedData = (id, data) => {
     setCache(id, data)
