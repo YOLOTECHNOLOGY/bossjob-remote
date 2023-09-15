@@ -27,10 +27,26 @@ export default async function build() {
             entryFileNames: `[name].js`
 
           }],
-         
+
         }
       }
     })
+    if (module.customService) {
+      await vite.build({
+        mode: env,
+        base: `/${module.id}/`,
+        publicDir: process.cwd() + module.root,
+        build: {
+          ssr: true,
+          manifest: true,
+          outDir: getServerDir(module.id) + '/',
+          rollupOptions: {
+            input: `${module.root}/${module.customService}`,
+            output: module.customService
+          }
+        }
+      })
+    }
     if (!module.ssr) {
       return
     }
@@ -81,6 +97,7 @@ export default async function build() {
         }
       }
     })
+
   })
   return await Promise.all(tasks)
 }

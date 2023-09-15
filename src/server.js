@@ -58,6 +58,10 @@ export default async function startServer() {
                 next(error)
             }
         });
+        if(point.customService) {
+            const service = await getImportFile(`dist-${point.id}/server/${point.customService}`)
+            service?.default?.(app)
+        }
     })
     const server = app.listen(3000, () => {
         const host = server.address().address;

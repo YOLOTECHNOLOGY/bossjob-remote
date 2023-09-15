@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable no-fallthrough */
 import { spawn } from 'child_process';
 import process from 'process';
 
@@ -34,6 +33,7 @@ switch (command) {
         start        启动已经构建的包
     `);
     process.exit(0);
+  // eslint-disable-next-line no-fallthrough
   default:
     console.error(`Unknown command: ${command}`);
     process.exit(1);
