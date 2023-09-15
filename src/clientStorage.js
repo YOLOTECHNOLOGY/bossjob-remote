@@ -1,11 +1,21 @@
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
-// 初始化 BOSSJOB_SHARED_DATA
-window.BOSSJOB_SHARED_DATA = window.BOSSJOB_SHARED_DATA || {};
-window.BOSSJOB_INITIAL_PROPS = window.BOSSJOB_INITIAL_PROPS || {};
-// 创建一个 BehaviorSubject，用于发布数据变化
-window.BOSSJOB_BASE_SUBJECT = window.BOSSJOB_BASE_SUBJECT || new BehaviorSubject(null);
-window.BOSSJOB_NOTE_SUBJECT = window.BOSSJOB_NOTE_SUBJECT || new Subject(null);
+if (typeof window !== 'undefined') {
+    // 初始化 BOSSJOB_SHARED_DATA
+    window.BOSSJOB_SHARED_DATA = window.BOSSJOB_SHARED_DATA || {};
+    window.BOSSJOB_INITIAL_PROPS = window.BOSSJOB_INITIAL_PROPS || {};
+    // 创建一个 BehaviorSubject，用于发布数据变化
+    window.BOSSJOB_BASE_SUBJECT = window.BOSSJOB_BASE_SUBJECT || new BehaviorSubject(null);
+    window.BOSSJOB_NOTE_SUBJECT = window.BOSSJOB_NOTE_SUBJECT || new Subject(null);
+    window.BOSSJOB_STORAGE_COMMANDS = {
+        getSharedData,
+        watchSharedData,
+        getInitialProps,
+        setInitialProps,
+        publishSharedData
+    }
+}
+
 // 设置数据
 const setCache = (id, data) => {
     const oldData = window.BOSSJOB_SHARED_DATA?.[id]
@@ -57,12 +67,15 @@ export const publishSharedData = (id, data) => {
     setCache(id, data)
 }
 
-window.BOSSJOB_STORAGE_COMMANDS = {
-    getSharedData,
-    watchSharedData,
-    getInitialProps,
-    setInitialProps,
-    publishSharedData
+if (typeof window !== 'undefined') {
+    
+    window.BOSSJOB_STORAGE_COMMANDS = {
+        getSharedData,
+        watchSharedData,
+        getInitialProps,
+        setInitialProps,
+        publishSharedData
+    }
 }
 function deepEqual(obj1, obj2) {
     if (obj1 === obj2) {
