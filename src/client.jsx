@@ -28,9 +28,9 @@ export const getClient = config => {
                     }
                 });
 
-            const headerScripts = data.scripts?.map(config.parseScript)
-            const headerLinks = data.links?.map(config.parseLink)
-            const bodyScripts = data.bodyScripts?.map(config.parseScript)
+            const headerScripts = data.scripts?.map(config.parseScript) ?? []
+            const headerLinks = data.links?.map(config.parseLink) ?? []
+            const bodyScripts = data.bodyScripts?.map(config.parseScript) ?? []
             const initalSharedData = { ...data.initalSharedData, ...options.initalSharedData }
             const inital = config.parseScript({
                 textContent: `
@@ -40,6 +40,7 @@ export const getClient = config => {
                  window.BOSSJOB_INITIAL_PROPS["${options.id}"] = ${JSON.stringify(options.initialProps ?? {})}
                  window.BOSSJOB_SHARED_DATA = {...window.BOSSJOB_SHARED_DATA,...${JSON.stringify(initalSharedData ?? {})}}
                  window.BOSSJOB_SHARED_DATA.env = "${process.env.NODE_ENV}"
+                 window.__vite_plugin_react_preamble_installed__ = true
                  `
             })
             return {

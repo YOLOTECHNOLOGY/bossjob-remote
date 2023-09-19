@@ -7,13 +7,7 @@ if (typeof window !== 'undefined') {
     // 创建一个 BehaviorSubject，用于发布数据变化
     window.BOSSJOB_BASE_SUBJECT = window.BOSSJOB_BASE_SUBJECT || new BehaviorSubject(null);
     window.BOSSJOB_NOTE_SUBJECT = window.BOSSJOB_NOTE_SUBJECT || new Subject(null);
-    window.BOSSJOB_STORAGE_COMMANDS = {
-        getSharedData,
-        watchSharedData,
-        getInitialProps,
-        setInitialProps,
-        publishSharedData
-    }
+
 }
 
 // 设置数据
