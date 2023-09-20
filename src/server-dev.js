@@ -63,7 +63,7 @@ export default async function startServer() {
                 }
                 const filePath = join(process.cwd(), getPointHtmlPath(point.id, true));
                 html = readFileSync(filePath, 'utf8')
-                html = await vite.transformIndexHtml('index.html', html,'http://localhost:3000')
+                html = await vite.transformIndexHtml('index.html', html, 'http://localhost:3000')
                 console.log({ html })
                 const parsed = parseHtml(html)
                 res.end(JSON.stringify({ ssr, ...parsed }));

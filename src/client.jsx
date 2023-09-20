@@ -39,7 +39,7 @@ export const getClient = config => {
 
                  window.BOSSJOB_INITIAL_PROPS["${options.id}"] = ${JSON.stringify(options.initialProps ?? {})}
                  window.BOSSJOB_SHARED_DATA = {...window.BOSSJOB_SHARED_DATA,...${JSON.stringify(initalSharedData ?? {})}}
-                 window.BOSSJOB_SHARED_DATA.env = "${process.env.NODE_ENV}"
+                 window.BOSSJOB_SHARED_DATA.env = "${config.env || process.env.NODE_ENV}"
                  window.__vite_plugin_react_preamble_installed__ = true
                  `
             })
