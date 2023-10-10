@@ -61,6 +61,28 @@ export const publishSharedData = (id, data) => {
     setCache(id, data)
 }
 
+export const observerRender = (render,id) => {
+    let rendered = false;
+    const observer = new MutationObserver((mutationsList, observer) => {
+        // Look through all mutations that just occured
+        for (const mutation of mutationsList) {
+            // If the addedNodes property has one or more nodes
+            if (mutation.addedNodes.length) {
+                const element = document.getElementById(id);
+                if (element) {
+                    // Your element is added, run your script here
+                    if(!rendered){
+                        render()
+                        rendered = true
+                    }
+                    observer.disconnect(); // Stop observing
+                }
+            }
+        }
+    })
+    observer.observe(document.body, { childList: true, subtree: true });
+}
+
 if (typeof window !== 'undefined') {
     
     window.BOSSJOB_STORAGE_COMMANDS = {
