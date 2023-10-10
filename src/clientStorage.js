@@ -61,7 +61,7 @@ export const publishSharedData = (id, data) => {
     setCache(id, data)
 }
 
-export const observerRender = (render,id) => {
+export const observerRender = (render, id) => {
     let rendered = false;
     const observer = new MutationObserver((mutationsList, observer) => {
         // Look through all mutations that just occured
@@ -71,8 +71,9 @@ export const observerRender = (render,id) => {
                 const element = document.getElementById(id);
                 if (element) {
                     // Your element is added, run your script here
-                    if(!rendered){
+                    if (!rendered) {
                         render()
+                        publishSharedData('MODULE_LOADED', modules => ({ ...modules, [id]: true }))
                         rendered = true
                     }
                     observer.disconnect(); // Stop observing
@@ -84,7 +85,7 @@ export const observerRender = (render,id) => {
 }
 
 if (typeof window !== 'undefined') {
-    
+
     window.BOSSJOB_STORAGE_COMMANDS = {
         getSharedData,
         watchSharedData,
