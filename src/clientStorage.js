@@ -1,5 +1,6 @@
-import { BehaviorSubject, Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Subject } from 'rxjs/internal/Subject';
+import { filter } from 'rxjs/internal/operators/filter';
 if (typeof window !== 'undefined') {
     // 初始化 BOSSJOB_SHARED_DATA
     window.BOSSJOB_SHARED_DATA = window.BOSSJOB_SHARED_DATA || {};

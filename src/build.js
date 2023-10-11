@@ -21,12 +21,12 @@ export default async function build() {
         rollupOptions: {
           input: `${module.root}/index.html`,
 
-          output: [{
-            chunkFileNames: `[name]-[hash].js`,
-            assetFileNames: `[name]-[hash].[ext]`,
-            entryFileNames: `[name].js`
+          // output: [{
+          //   chunkFileNames: `[name]-[hash].js`,
+          //   assetFileNames: `[name]-[hash].[ext]`,
+          //   entryFileNames: `[name].js`
 
-          }],
+          // }],
 
         }
       }
