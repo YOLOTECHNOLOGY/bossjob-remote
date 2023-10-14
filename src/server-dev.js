@@ -11,39 +11,36 @@ export default async function startServer() {
     const app = express();
     const config = await getImportFile('bossjob.config.js')
     const points = config.default.remotePoints
-    
+
     let index = 0
-    app.use(express.static(getServerPublic(),{
+    app.use(express.static(getServerPublic(), {
         setHeaders: (res, path) => {
-          if (path.endsWith('.js')) {
-            res.set('Service-Worker-Allowed', '/');
-          }
-        }
-      }));
-    points.forEach(async (point) => {
-        console.log({index})
-        index++
-        const vite = await createViteServer({
-            plugins: [react()],
-            server: { 
-                middlewareMode: true, 
-                preTransformRequests: true ,
-                hmr :{
-                    port:3000 + index
-                }
-            },
-            ssr:false,
-            // envPrefix:point.id,
-            appType: 'custom',
-            base:`/${point.id}/`,
-            mode: 'development',
-            optimizeDeps: {
-    
+            if (path.endsWith('.js')) {
+                res.set('Service-Worker-Allowed', '/');
             }
-        })
-       
-        app.use(vite.middlewares)
-       
+        }
+    }));
+     
+    const vite = await createViteServer({
+        plugins: [react()],
+        server: {
+            middlewareMode: true,
+            preTransformRequests: true,
+            // hmr: {
+            //     port: 3000 + index
+            // }
+        },
+        ssr: false,
+        // envPrefix:point.id,
+        appType: 'custom',
+        // base: `/${point.id}/`,
+        mode: 'development',
+        optimizeDeps: {
+
+        }
+    })
+    app.use(vite.middlewares)
+    points.forEach(async (point) => {
         app.get(`/${point.id}`, async (req, res) => {
             const filePath = join(process.cwd(), getPointHtmlPath(point.id, true));
             let html = ''
@@ -66,7 +63,7 @@ export default async function startServer() {
                 html = await vite.transformIndexHtml('index.html', html, 'http://localhost:3000')
                 console.log({ html })
                 const parsed = parseHtml(html)
-                res.end(JSON.stringify({ ssr, ...parsed }));
+                res.end(JSON.stringify({ ssr, ...parsed, dev: true }));
             } catch (error) {
                 next(error)
             }

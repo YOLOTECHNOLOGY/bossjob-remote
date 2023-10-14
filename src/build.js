@@ -5,32 +5,34 @@ export default async function build() {
   const env = process.argv[2]
   const { default: bossjobConfig } = await getImportFile('bossjob.config.js')
   const modules = bossjobConfig.remotePoints
+  const input = {}
+  modules.forEach(module => input[module.id] = `${module.root}/index.html`)
+  await vite.build({
+    mode: env,
+    base: `/dist-${bossjobConfig.serverId}/`,
+    publicDir: process.cwd() + 'public',
+    build: {
+      minify: false,
+      manifest: true,
+      ssr: false,
+      outDir: getClientDir(),
+      cssCodeSplit: true,
+      // manifest: true,
+      rollupOptions: {
+        input 
 
-  const tasks = modules.map(async module => {
-    await vite.build({
-      mode: env,
-      base: `/${module.id}/`,
-      publicDir: process.cwd() + module.root,
-      build: {
-        minify: false,
-        manifest: true,
-        ssr: false,
-        outDir: getClientDir(module.id),
-        cssCodeSplit: true,
-        // manifest: true,
-        rollupOptions: {
-          input: `${module.root}/index.html`,
+        // output: [{
+        //   chunkFileNames: `[name]-[hash].js`,
+        //   assetFileNames: `[name]-[hash].[ext]`,
+        //   entryFileNames: `[name].js`
 
-          // output: [{
-          //   chunkFileNames: `[name]-[hash].js`,
-          //   assetFileNames: `[name]-[hash].[ext]`,
-          //   entryFileNames: `[name].js`
+        // }],
 
-          // }],
-
-        }
       }
-    })
+    }
+  })
+  
+   modules.map(async module => {
     if (module.customService) {
       await vite.build({
         mode: env,
@@ -99,6 +101,6 @@ export default async function build() {
     })
 
   })
-  return await Promise.all(tasks)
+  // return await Promise.all(tasks)
 }
 build()

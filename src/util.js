@@ -13,13 +13,13 @@ export function getClientDir(id, devMode = false) {
     if (devMode) {
         return `src/${id}/`
     }
-    return `dist-${id}/client`
+    return `dist/client`
 }
 export function getServerDir(id, devMode = false) {
     if (devMode) {
         return `src/${id}/`
     }
-    return `dist-${id}/server`
+    return `dist/server`
 }
 export function getServerPublic() {
    
@@ -29,11 +29,11 @@ export function getPointHtmlPath(id, devMode = false) {
     if (devMode) {
         return `src/${id}/index.html`
     }
-    return `dist-${id}/client/src/${id}/index.html`
+    return `dist/client/src/${id}/index.html`
 }
 
 export function getPointIndexJsPath(id) {
-    return `dist-${id}/client/index.js`
+    return `dist/client/src/${id}/index.js`
 }
 
 export function parseHtml(htmlString) {
@@ -50,7 +50,7 @@ export function parseHtml(htmlString) {
     });
     body.querySelectorAll('script').forEach(s => bodyScripts.push({ src: s.src, textContent: s.textContent }));
     // 获取所有的link标签并提取href属性
-    head.querySelectorAll('link').forEach(l => links.push({ href: l.href, rel: l.rel }));
+    head.querySelectorAll('link').forEach(l => links.push({ href: l.href, rel: l.rel ,as:l.as}));
 
     return { scripts, links, bodyScripts }
 }
