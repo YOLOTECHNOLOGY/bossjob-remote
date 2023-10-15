@@ -4,11 +4,20 @@ import { getImportFile, getPointHtmlPath, getServerPublic, parseHtml } from './u
 import process from 'process';
 // import { join } from 'path';
 // import { readFileSync } from 'fs';
+import helmet from 'helmet';
 import { createServer as createViteServer } from 'vite'
 import path from 'path'
 import react from '@vitejs/plugin-react'
 export default async function startServer() {
     const app = express();
+    app.use(helmet({
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "data:", "blob:", "https:", "http:"],
+            connectSrc: ["'self'", "ws:"]
+          }
+        }
+      }));
     const config = await getImportFile('bossjob.config.js')
     const points = config.default.remotePoints
     const input = {}
