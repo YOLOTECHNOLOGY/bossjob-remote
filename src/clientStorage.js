@@ -64,21 +64,28 @@ export const publishSharedData = (id, data) => {
 
 export const observerRender = (render, id) => {
     let rendered = false;
+    const renderFunc = () => {
+        const element = document.getElementById(id);
+        if (element) {
+            // Your element is added, run your script here
+            if (!rendered) {
+                render()
+                publishSharedData('MODULE_LOADED', modules => ({ ...modules, [id]: true }))
+                rendered = true
+            }
+            observer.disconnect(); // Stop observing
+        }
+    }
+    renderFunc()
+    if (!rendered) {
+        return
+    }
     const observer = new MutationObserver((mutationsList, observer) => {
         // Look through all mutations that just occured
         for (const mutation of mutationsList) {
             // If the addedNodes property has one or more nodes
             if (mutation.addedNodes.length) {
-                const element = document.getElementById(id);
-                if (element) {
-                    // Your element is added, run your script here
-                    if (!rendered) {
-                        render()
-                        publishSharedData('MODULE_LOADED', modules => ({ ...modules, [id]: true }))
-                        rendered = true
-                    }
-                    observer.disconnect(); // Stop observing
-                }
+                renderFunc()
             }
         }
     })
