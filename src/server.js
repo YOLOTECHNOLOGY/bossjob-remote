@@ -43,10 +43,11 @@ export default async function startServer() {
         })
         app.post(`/${point.id}`, async (req, res, next) => {
             try {
-                const data = req.body?.data;
-                console.log({ data })
+               
                 let ssr = false, html
                 if (point.ssr) {
+                    const data = req.body?.data;
+                    console.log({ data })
                     const { default: renderer } = await getImportFile(`dist-${point.id}/server/renderer/renderer.js`)
                     ssr = await renderer(point.id, data)
                 }

@@ -13,7 +13,7 @@ export const getClient = config => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ initialProps: options.initialProps ?? {} }),
+                body: options.ssr ? JSON.stringify({ initialProps: options.initialProps ?? {} }):'',
             }).then(response => {
                 console.log({ response })
                 return response.json()
