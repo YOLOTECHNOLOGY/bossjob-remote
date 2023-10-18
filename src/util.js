@@ -22,7 +22,7 @@ export function getServerDir(id, devMode = false) {
     return `dist/server`
 }
 export function getServerPublic() {
-   
+
     return `public`
 }
 export function getPointHtmlPath(id, devMode = false) {
@@ -45,12 +45,12 @@ export function parseHtml(htmlString) {
     let bodyScripts = []
     // 获取所有的script标签并提取src属性
     head.querySelectorAll('script').forEach(s => {
-        
-        return scripts.push({ src: s.src,textContent: s.textContent })
+
+        return scripts.push({ src: s.src, textContent: s.textContent })
     });
-    body.querySelectorAll('script').forEach(s => bodyScripts.push({ src: s.src, textContent: s.textContent }));
+    body.querySelectorAll('script').forEach(s => bodyScripts.push({ src: s.src, textContent: s.textContent, async: s.async }));
     // 获取所有的link标签并提取href属性
-    head.querySelectorAll('link').forEach(l => links.push({ href: l.href, rel: l.rel ,as:l.as}));
+    head.querySelectorAll('link').forEach(l => links.push({ href: l.href, rel: l.rel, as: l.as }));
 
     return { scripts, links, bodyScripts }
 }

@@ -63,7 +63,9 @@ export const publishSharedData = (id, data) => {
 }
 
 export const observerRender = (render, id) => {
+    console.log({ startRender: id })
     let rendered = false;
+    let count = 0
     const renderFunc = () => {
         const element = document.getElementById(id);
         if (element) {
@@ -73,23 +75,34 @@ export const observerRender = (render, id) => {
                 publishSharedData('MODULE_LOADED', modules => ({ ...modules, [id]: true }))
                 rendered = true
             }
-            observer.disconnect(); // Stop observing
         }
     }
-    renderFunc()
-    if (!rendered) {
-        return
-    }
-    const observer = new MutationObserver((mutationsList, observer) => {
-        // Look through all mutations that just occured
-        for (const mutation of mutationsList) {
-            // If the addedNodes property has one or more nodes
-            if (mutation.addedNodes.length) {
-                renderFunc()
-            }
+    const start = () => {
+        renderFunc()
+        count++
+        if (!rendered && count < 100) {
+            setTimeout(start, 200)
+        } else {
+            console.log({ endRender: id })
         }
-    })
-    observer.observe(document.body, { childList: true, subtree: true });
+    }
+    start()
+    // renderFunc()
+    // if (!rendered) {
+    //     return
+    // }
+    // const observer = new MutationObserver((mutationsList, observer) => {
+    //     // Look through all mutations that just occured
+    //     console.log({ mutationsList })
+    //     for (const mutation of mutationsList) {
+    //         // If the addedNodes property has one or more nodes
+    //         if (mutation.addedNodes.length) {
+    //             renderFunc()
+    //             observer.disconnect(); // Stop observing
+    //         }
+    //     }
+    // })
+    // observer.observe(document.body, { childList: true, subtree: true });
 }
 
 if (typeof window !== 'undefined') {

@@ -43,7 +43,7 @@ export default async function startServer() {
         })
         app.post(`/${point.id}`, async (req, res, next) => {
             try {
-               
+                res.setHeader('Cache-Control', 'public, max-age=6');
                 let ssr = false, html
                 if (point.ssr) {
                     const data = req.body?.data;
