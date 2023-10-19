@@ -13,7 +13,10 @@ export const getClient = config => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: options.ssr ? JSON.stringify({ initialProps: options.initialProps ?? {} }):'',
+                body: JSON.stringify({
+                    initialProps: options.ssr ? options.initialProps : {},
+                    timestamp: new Date().getTime()
+                }),
             }).then(response => {
                 console.log({ response })
                 return response.json()
@@ -29,13 +32,13 @@ export const getClient = config => {
                 });
 
             const headerScripts = data.scripts
-            // ?.filter(script => !script?.textContent?.includes('import RefreshRuntime'))
-            ?.map(config.parseScript) ?? []
+                // ?.filter(script => !script?.textContent?.includes('import RefreshRuntime'))
+                ?.map(config.parseScript) ?? []
             const headerLinks = data.links?.map(config.parseLink) ?? []
             const bodyScripts = data.bodyScripts?.map(config.parseScript) ?? []
             const initalSharedData = { ...data.initalSharedData, ...options.initalSharedData }
             const inital = [config.parseScript({
-                id:`inital-${options.id}`,
+                id: `inital-${options.id}`,
                 textContent: `
                  window.BOSSJOB_INITIAL_PROPS = window.BOSSJOB_INITIAL_PROPS || {};
                  window.BOSSJOB_SHARED_DATA = window.BOSSJOB_SHARED_DATA || {};
@@ -45,17 +48,17 @@ export const getClient = config => {
                  window.BOSSJOB_SHARED_DATA.env = "${config.env || process.env.NODE_ENV}"
                  `
             }),
-            // data.dev && config.parseScript({
-            //     textContent: `
-            //         import RefreshRuntime from "/remote-get-started/@react-refresh" 
-            //         if(!window.__vite_plugin_react_preamble_installed__) {
-            //             RefreshRuntime.injectIntoGlobalHook(window)
-            //             window.$RefreshReg$ = () => {}
-            //             window.$RefreshSig$ = () => (type) => type
-            //             window.__vite_plugin_react_preamble_installed__ = true
-            //         }
-            //        `
-            // })
+                // data.dev && config.parseScript({
+                //     textContent: `
+                //         import RefreshRuntime from "/remote-get-started/@react-refresh" 
+                //         if(!window.__vite_plugin_react_preamble_installed__) {
+                //             RefreshRuntime.injectIntoGlobalHook(window)
+                //             window.$RefreshReg$ = () => {}
+                //             window.$RefreshSig$ = () => (type) => type
+                //             window.__vite_plugin_react_preamble_installed__ = true
+                //         }
+                //        `
+                // })
             ].filter(a => a)
             return {
                 inHead: <>{[...inital, ...headerLinks, ...headerScripts]}</>,

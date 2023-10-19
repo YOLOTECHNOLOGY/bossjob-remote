@@ -43,7 +43,9 @@ export default async function startServer() {
         })
         app.post(`/${point.id}`, async (req, res, next) => {
             try {
-                res.setHeader('Cache-Control', 'public, max-age=6');
+                res.set('Cache-Control', 'no-store, must-revalidate');
+                res.set('Pragma', 'no-cache');
+                res.set('Expires', '0');
                 let ssr = false, html
                 if (point.ssr) {
                     const data = req.body?.data;
