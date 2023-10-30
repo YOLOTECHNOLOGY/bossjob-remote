@@ -1,7 +1,7 @@
 {
   "name": "bossjob-remote",
   "private": false,
-  "version": "0.0.4-fix7",
+  "version": "0.0.4-fix8",
   "type": "module",
   "engines": {
     "node": ">=14.0.0"
